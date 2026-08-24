@@ -1,8 +1,8 @@
-# Contributing to rHRG
+# Contributing to rcacumen
 
-rHRG delineates tree crowns from a canopy height model by hierarchical
+rcacumen delineates tree crowns from a canopy height model by hierarchical
 region growing. It is the R twin of
-[pyHRG](https://github.com/igorpawelec/pyhrg); the two are developed together
+[pycacumen](https://github.com/igorpawelec/pycacumen); the two are developed together
 and are meant to agree.
 
 Bug reports, ideas and pull requests are all welcome.
@@ -39,7 +39,7 @@ fails with *symbol name "C_rag" not in load table*.
 
 ```bash
 R CMD build .
-R CMD check --as-cran rhrg_X.Y.Z.tar.gz
+R CMD check --as-cran rcacumen_X.Y.Z.tar.gz
 ```
 
 Tests are plain R scripts in `tests/`, run by `R CMD check`; a failure there
@@ -52,17 +52,17 @@ problems the tests cannot see.
 `man/` is generated. Edit the roxygen comments above the function in `R/`,
 then run `roxygen2::roxygenise()`; never edit a `.Rd` by hand.
 
-This is not a style preference. Every file in rHRG's `man/` once carried a
+This is not a style preference. Every file in rcacumen's `man/` once carried a
 hand-written header instead of roxygen2's marker, so `roxygenise()` silently
 skipped all of them and the directory drifted from the comments it claimed to
 come from. The only part `R CMD check` notices is argument defaults, via
 `codoc`; prose can be wrong indefinitely.
 
-## Agreement with pyHRG
+## Agreement with pycacumen
 
 ```bash
-python3 tools/generate_pyhrg_reference.py     # needs pyhrg installed
-Rscript tools/cross_validate_against_pyhrg.R
+python3 tools/generate_pycacumen_reference.py     # needs pycacumen installed
+Rscript tools/cross_validate_against_pycacumen.R
 ```
 
 70 cases, including nodata holes, height plateaus, `protect_seeds` and
@@ -72,7 +72,7 @@ stable across the two implementations. On real CHMs the two differ on about
 0.25 % of watershed pixels — see the README for why that is not a defect in
 either.
 
-It lives in `tools/` and not `tests/` because it needs Python and pyHRG
+It lives in `tools/` and not `tests/` because it needs Python and pycacumen
 installed, which CRAN machines do not have. **Run it if you change the
 growing, the arbitration or the smoothing.** If a change makes the two
 diverge, the honest options are to fix one side or to document the
@@ -98,10 +98,10 @@ alarm in this family three separate times.
 
 The checklist exists because of a specific failure. `max_iters` changed
 default in 0.3.0, and that one change broke CI in both HRG twins at once —
-pyHRG with `int | None`, a runtime `TypeError` before Python 3.10, and rHRG
+pycacumen with `int | None`, a runtime `TypeError` before Python 3.10, and rcacumen
 with a `man/` page still documenting `200L`, which `R CMD check` reports as a
 codoc WARNING and the workflow treats as a failure. Neither was noticed.
-**pyHRG then tagged 0.3.0, 0.4.0 and 0.5.0 with the workflow red**; rHRG
+**pycacumen then tagged 0.3.0, 0.4.0 and 0.5.0 with the workflow red**; rcacumen
 shipped two the same way and rgeoadaptels two more.
 
 Local checks passed in every one of those cases. They were run on one R
@@ -109,7 +109,7 @@ version, on one operating system, by someone who already knew what the change
 was meant to do. The matrix is the part that disagrees.
 
 1. Update `NEWS.md`. If the output changes, say so in those words.
-2. **`roxygen2::roxygenise()`.** Skipping this is what broke rHRG: `man/`
+2. **`roxygen2::roxygenise()`.** Skipping this is what broke rcacumen: `man/`
    kept a default the code no longer had, and `?grow_crowns` told readers the
    cap was still there.
 3. Bump `Version:` in `DESCRIPTION`, and the version and `date-released` in
@@ -126,7 +126,7 @@ was meant to do. The matrix is the part that disagrees.
    This is the step that was missing. Either open the Actions tab, or:
 
    ```bash
-   curl -s "https://api.github.com/repos/igorpawelec/rhrg/actions/runs?per_page=1" | python -c "import json,sys; r=json.load(sys.stdin)['workflow_runs'][0]; print(r['head_sha'][:7], r['status'], r['conclusion'])"
+   curl -s "https://api.github.com/repos/igorpawelec/rcacumen/actions/runs?per_page=1" | python -c "import json,sys; r=json.load(sys.stdin)['workflow_runs'][0]; print(r['head_sha'][:7], r['status'], r['conclusion'])"
    ```
 
    `gh run list` is nicer if the GitHub CLI is installed; it is not
@@ -141,4 +141,4 @@ history either way.
 
 ## Licence
 
-rHRG is GPLv3. Contributions are accepted under the same licence.
+rcacumen is GPLv3. Contributions are accepted under the same licence.

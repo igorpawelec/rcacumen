@@ -1,13 +1,13 @@
-"""Write reference crowns from pyHRG for tools/cross_validate_against_pyhrg.R.
+"""Write reference crowns from pycacumen for tools/cross_validate_against_pycacumen.R.
 
-    pip install pyhrg
-    python3 tools/generate_pyhrg_reference.py
+    pip install pycacumen
+    python3 tools/generate_pycacumen_reference.py
 
 Copyright (C) 2025 Igor Pawelec. Licence: GPLv3.
 """
 import os
 import numpy as np
-from pyhrg import smooth_chm, detect_tops, as_pixels, HierarchicalRegionGrower
+from pycacumen import smooth_chm, detect_tops, as_pixels, HierarchicalRegionGrower
 
 OUT = os.path.join("tools", "reference")
 os.makedirs(OUT, exist_ok=True)
@@ -32,7 +32,7 @@ for k in range(70):
     if k % 3 == 0:
         chm = np.round(chm * 2) / 2          # plateaus, where ties are common
     if k % 7 == 0:
-        # Nodata holes. Until pyHRG 0.5.0 / rHRG 0.4.0 these two disagreed
+        # Nodata holes. Until pycacumen 0.5.0 / rcacumen 0.4.0 these two disagreed
         # completely here: scipy's comparison filters are undefined on NaN,
         # so Python smoothed the hole edges to arbitrary window elements,
         # while R propagated NA and then stopped with "missing value where

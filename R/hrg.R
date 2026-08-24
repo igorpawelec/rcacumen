@@ -1,4 +1,4 @@
-#' @useDynLib rhrg, .registration = TRUE
+#' @useDynLib rcacumen, .registration = TRUE
 NULL
 
 #' Conflict-resolution rules
@@ -144,7 +144,7 @@ grow_crowns <- function(chm, tops,
 .watershed <- function(img, markers, mask) {
   nr <- nrow(img); nc <- ncol(img)
   # t() so the column-major buffer matches the row-major layout the C code
-  # and pyHRG both assume; without it the neighbour order would transpose.
+  # and pycacumen both assume; without it the neighbour order would transpose.
   out <- .Call(C_watershed, as.double(t(img)), as.integer(t(markers)),
                as.integer(t(mask)), nr, nc)
   matrix(out, nr, nc, byrow = TRUE)

@@ -21,10 +21,10 @@ import sys
 
 import numpy as np
 import rasterio
-from pyhrg import (smooth_chm, detect_tops, as_pixels,
+from pycacumen import (smooth_chm, detect_tops, as_pixels,
                    HierarchicalRegionGrower)
 
-SRC = os.environ.get("CHM_DIR", r"D:\Apps\pyhrg\test_data")
+SRC = os.environ.get("CHM_DIR", r"D:\Apps\pycacumen\test_data")
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 8
 EPS = 1e-9
 

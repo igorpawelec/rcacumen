@@ -1,6 +1,6 @@
 # Plain-R tests: any error fails R CMD check. No testthat dependency, so
 # these run anywhere the package installs.
-library(rhrg)
+library(rcacumen)
 
 ok <- function(cond, what) {
   if (!isTRUE(cond)) stop("FAILED: ", what, call. = FALSE)

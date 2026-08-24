@@ -1,6 +1,6 @@
-# rhrg 0.4.0
+# rcacumen 0.4.0
 
-# rhrg 0.4.2
+# rcacumen 0.4.2
 
 ## Changed
 
@@ -11,10 +11,10 @@
   call sites in `R/hrg.R` already pass the registered object, so nothing
   inside the package changes; what changes is that a mistyped or renamed
   entry point fails at load rather than in the middle of someone's run, and
-  the C routines stop being callable from outside rHRG.
+  the C routines stop being callable from outside rcacumen.
 
 
-# rhrg 0.4.1
+# rcacumen 0.4.1
 
 ## Fixed
 
@@ -48,17 +48,17 @@
   `.prepare_mask()` treats `NA` as outside the mask, which is where numpy
   arrives by a different route, since `NaN > x` is `FALSE`.
 
-  On `chm_150_2023.tif` R and pyHRG now both return **255 crowns**. Neither
+  On `chm_150_2023.tif` R and pycacumen now both return **255 crowns**. Neither
   managed it before: R crashed and Python silently smoothed 3 % of the raster
   to arbitrary values, because scipy's comparison filters are undefined on
   NaN rather than NaN-aware. Matching Python would have meant reproducing that
   -- the same trap that gave this package its watershed divergence -- so both
-  were defined instead. pyHRG 0.5.0 carries the other half.
+  were defined instead. pycacumen 0.5.0 carries the other half.
 
   The shared cross-check gained ten scenes with nodata holes, so this is
   covered rather than assumed.
 
-# rhrg 0.3.0
+# rcacumen 0.3.0
 
 * **`max_iters` now defaults to `NULL`, meaning natural termination.** It was
   200, and the bound bit: on `chm_33_2012.tif` 332 of 492 crowns stopped there
@@ -78,9 +78,9 @@
 
   Passing an explicit `max_iters` still works and now warns when it binds.
 
-  pyHRG 0.3.0 carries the same change.
+  pycacumen 0.3.0 carries the same change.
 
-# rhrg 0.2.0
+# rcacumen 0.2.0
 
 * **An even smoothing or detection window is now refused.** An even window has
   no centre pixel, so it sits half a pixel off and the result depends on which
@@ -90,10 +90,10 @@
   "gaussian"` is exempt, because `ws` only sets sigma there and the kernel stays
   symmetric.
 
-  pyHRG 0.2.0 carries the same guard; the asymmetry was faithfully reproduced
+  pycacumen 0.2.0 carries the same guard; the asymmetry was faithfully reproduced
   here, so it had to be fixed on both sides to keep the two in step.
 
-# rhrg 0.1.0
+# rcacumen 0.1.0
 
 First release.
 
@@ -107,9 +107,9 @@ First release.
 * `read_chm()`, `write_crowns()` and `crowns_to_polygons()` bridge to
   \pkg{terra}, which is only a Suggests: the algorithm works on plain matrices
   with no spatial dependency.
-* Verified identical to the pyHRG Python package on 60 random scenes
+* Verified identical to the pycacumen Python package on 60 random scenes
   (120,977 pixels, no difference), and the watershed alone on a further 200
-  scenes against `scikit-image`. See `tools/cross_validate_against_pyhrg.R`.
+  scenes against `scikit-image`. See `tools/cross_validate_against_pycacumen.R`.
 * On real canopy height models the agreement is close but not exact: 375 of
   147,368 masked pixels differ in the watershed (0.25 %), which the region
   growing amplifies to 5,142 of 281,602 crown pixels. `src/watershed.c`

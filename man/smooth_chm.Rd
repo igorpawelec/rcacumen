@@ -28,7 +28,7 @@ height accuracy for far fewer false tops.
 }
 \details{
 Edges are handled by reflection, matching \code{scipy.ndimage}, so results
-agree with pyHRG.
+agree with pycacumen.
 
 \code{NA} is not treated specially and will spread by \code{ws \%/\% 2}. Fill nodata
 before smoothing if that matters.

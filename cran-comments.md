@@ -39,7 +39,7 @@ that accumulates per-region statistics. Everything else is plain R.
 `read_chm()`, `write_crowns()` and `crowns_to_polygons()`; the algorithm
 itself runs on ordinary numeric matrices.
 
-The DESCRIPTION states that results match the pyHRG Python package pixel
+The DESCRIPTION states that results match the pycacumen Python package pixel
 for pixel on the shared synthetic test suite, and closely but not exactly
 on canopy height models containing plateaus. That distinction is
 deliberate and measured, not hedging: the two implementations break
@@ -48,6 +48,6 @@ the real scenes tested, and both figures are documented in the README
 along with how to reproduce them.
 
 `tools/` is excluded from the build via `.Rbuildignore`. It holds the
-cross-check against pyHRG, which needs Python and so cannot run on a CRAN
+cross-check against pycacumen, which needs Python and so cannot run on a CRAN
 machine, and a script that measures the method's sensitivity to those
 plateau ties.

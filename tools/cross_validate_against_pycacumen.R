@@ -1,18 +1,18 @@
-# Prove rHRG and pyHRG produce identical crowns.
+# Prove rcacumen and pycacumen produce identical crowns.
 #
 # This is the claim the two packages rest on, so it is checked rather than
 # asserted. It lives in tools/ and not tests/ because it needs Python and
-# pyHRG installed, which CRAN machines do not have.
+# pycacumen installed, which CRAN machines do not have.
 #
-#   python3 tools/generate_pyhrg_reference.py     # writes tools/reference/
-#   Rscript tools/cross_validate_against_pyhrg.R
+#   python3 tools/generate_pycacumen_reference.py     # writes tools/reference/
+#   Rscript tools/cross_validate_against_pycacumen.R
 #
 # Copyright (C) 2025 Igor Pawelec. Licence: GPLv3.
 
-library(rhrg)
+library(rcacumen)
 dir <- file.path("tools", "reference")
 if (!dir.exists(dir))
-  stop("run tools/generate_pyhrg_reference.py first", call. = FALSE)
+  stop("run tools/generate_pycacumen_reference.py first", call. = FALSE)
 
 meta <- utils::read.csv(file.path(dir, "meta.csv"), header = FALSE,
                         col.names = c("k", "vt", "rule", "n_contested",
@@ -25,7 +25,7 @@ meta <- utils::read.csv(file.path(dir, "meta.csv"), header = FALSE,
 if (ncol(meta) != 6L || nrow(meta) == 0L)
   stop("meta.csv has ", ncol(meta), " columns and ", nrow(meta),
        " rows, expected 6 columns and more than 0. Re-run ",
-       "tools/generate_pyhrg_reference.py; the last run did not finish.",
+       "tools/generate_pycacumen_reference.py; the last run did not finish.",
        call. = FALSE)
 
 bad <- 0L; diff_px <- 0L; tot_px <- 0L; contested_bad <- 0L
@@ -48,7 +48,7 @@ for (i in seq_len(nrow(meta))) {
   sm <- rd("sm"); ref <- rd("out")
   tops <- rd("tops"); if (ncol(tops) == 1L) tops <- t(tops)
 
-  # R's own detect_tops, against pyHRG's subpixel tops. This is deliberately
+  # R's own detect_tops, against pycacumen's subpixel tops. This is deliberately
   # compared *before* flooring: the validator used to be handed tops that
   # Python had already detected and floored, so R's detect_tops was never
   # run at all and a divergence there would have gone unseen.
@@ -56,7 +56,7 @@ for (i in seq_len(nrow(meta))) {
   own <- as.matrix(detect_tops(sm, hmin = 5, ws = 5))
   if (nrow(own) != nrow(sub)) {
     top_bad <- top_bad + 1L
-    cat(sprintf("  case %d: R found %d tops, pyHRG %d\n", k,
+    cat(sprintf("  case %d: R found %d tops, pycacumen %d\n", k,
                 nrow(own), nrow(sub)))
   } else {
     a <- own[order(own[, 1], own[, 2]), , drop = FALSE]
@@ -121,8 +121,8 @@ if (contested_bad > 0L)
 if (length(fail)) {
   cat("\n")
   for (f in fail) cat("  FAIL: ", f, "\n", sep = "")
-  stop("rHRG and pyHRG disagree beyond the documented bounds", call. = FALSE)
+  stop("rcacumen and pycacumen disagree beyond the documented bounds", call. = FALSE)
 }
-cat("\nrHRG == pyHRG exactly on the small scenes, and within 0.5% on the\n")
+cat("\nrcacumen == pycacumen exactly on the small scenes, and within 0.5% on the\n")
 cat("large crowded ones. On real canopy height models the two differ on\n")
 cat("about 0.25% of watershed pixels; see the README.\n")

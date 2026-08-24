@@ -1,4 +1,4 @@
-Package: rhrg
+Package: rcacumen
 Type: Package
 Title: Individual Tree Crown Delineation by Hierarchical Region Growing
 Version: 0.4.2
@@ -11,7 +11,7 @@ Description: Delineates individual tree crowns from a canopy height model.
     constraint, merging neighbouring trees where the canopy does not
     separate them, which corrects over-detected tree tops. Canopy claimed by
     two crowns is arbitrated on the data, so the segmentation does not depend
-    on the order the tree tops arrive in. Results match the 'pyHRG' Python
+    on the order the tree tops arrive in. Results match the 'pycacumen' Python
     package pixel for pixel on the shared synthetic test suite, and closely
     but not exactly on canopy height models containing plateaus, where the
     two implementations break ties differently; the difference is measured
@@ -26,8 +26,8 @@ Encoding: UTF-8
 Depends: R (>= 3.6.0)
 Imports: stats
 Suggests: terra
-URL: https://github.com/igorpawelec/rhrg
-BugReports: https://github.com/igorpawelec/rhrg/issues
+URL: https://github.com/igorpawelec/rcacumen
+BugReports: https://github.com/igorpawelec/rcacumen/issues
 NeedsCompilation: yes
 Config/roxygen2/version: 8.0.0
 Roxygen: list(markdown = TRUE)

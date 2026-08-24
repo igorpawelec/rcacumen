@@ -1,7 +1,7 @@
 /* Marker-based watershed by priority flooding.
  *
  * Reproduces skimage.segmentation.watershed (connectivity=1, compactness=0)
- * exactly, so that rHRG and pyHRG label the same pixels the same way. The
+ * exactly, so that rcacumen and pycacumen label the same pixels the same way. The
  * details that matter for that:
  *
  *   - the queue is ordered by (value, age), age being a strict insertion

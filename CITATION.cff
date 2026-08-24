@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "rHRG — Individual tree crown delineation by Hierarchical Region Growing"
+title: "rcacumen — Individual tree crown delineation by Hierarchical Region Growing"
 message: "If you use this software, please cite it as below."
 type: software
 authors:
@@ -8,7 +8,7 @@ authors:
     affiliation: "University of Agriculture in Kraków, Poland"
     email: igor.pawelec@urk.edu.pl
     orcid: "https://orcid.org/0009-0005-9798-3596"
-repository-code: "https://github.com/igorpawelec/rhrg"
+repository-code: "https://github.com/igorpawelec/rcacumen"
 license: GPL-3.0-or-later
 version: "0.4.2"
 date-released: "2026-07-22"
@@ -81,11 +81,11 @@ references:
     year: 2018
     doi: 10.3390/f9110702
   - type: software
-    title: "pyHRG — the Python implementation of the same method"
+    title: "pycacumen — the Python implementation of the same method"
     authors:
       - family-names: Pawelec
         given-names: Igor
-    url: "https://github.com/igorpawelec/pyhrg"
+    url: "https://github.com/igorpawelec/pycacumen"
     notes: >-
       Results match pixel for pixel on the shared synthetic test suite, and
       closely but not exactly on canopy height models containing plateaus,

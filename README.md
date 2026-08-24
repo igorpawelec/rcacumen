@@ -1,8 +1,8 @@
-# R HRG
+# rcacumen
 
-<img src="https://raw.githubusercontent.com/igorpawelec/rhrg/main/www/logoR.png" alt="R HRG logo" align="right" width="200"/>
+<img src="https://raw.githubusercontent.com/igorpawelec/rcacumen/main/www/logoR.png" alt="rcacumen logo" align="right" width="200"/>
 
-[![R-CMD-check](https://github.com/igorpawelec/rhrg/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/igorpawelec/rhrg/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/igorpawelec/rcacumen/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/igorpawelec/rcacumen/actions/workflows/R-CMD-check.yaml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![R](https://img.shields.io/badge/R-%3E%3D%203.6-blue.svg)](https://www.r-project.org)
 
@@ -10,13 +10,13 @@
 
 R and plain C. No Rcpp, no compiled dependencies, and `terra` only if you want to read files.
 
-> **Python users:** the same algorithm is in [pyHRG](https://github.com/igorpawelec/pyhrg). The two are separate repositories because their tooling and idioms do not mix — but they are not merely similar. On the shared synthetic test suite they produce **identical output, pixel for pixel**. On real canopy height models they agree closely but not exactly, because the two watershed implementations break plateau ties differently. Both numbers are measured, not claimed — see [Agreement with pyHRG](#agreement-with-pyhrg).
+> **Python users:** the same algorithm is in [pycacumen](https://github.com/igorpawelec/pycacumen). The two are separate repositories because their tooling and idioms do not mix — but they are not merely similar. On the shared synthetic test suite they produce **identical output, pixel for pixel**. On real canopy height models they agree closely but not exactly, because the two watershed implementations break plateau ties differently. Both numbers are measured, not claimed — see [Agreement with pycacumen](#agreement-with-pycacumen).
 
 ## Background
 
 Delineating individual crowns from a canopy height model runs into one persistent problem: **tree tops are over-detected**. A broad crown has a ragged upper surface, so local-maximum detection finds several peaks on it. Lower the sensitivity and you start losing real trees instead.
 
-rHRG treats that as the central problem rather than a preprocessing nuisance. Surplus tops are allowed, and the growing merges them back:
+rcacumen treats that as the central problem rather than a preprocessing nuisance. Surplus tops are allowed, and the growing merges them back:
 
 1. **Watershed.** Tree tops seed a marker-based watershed on the inverted CHM, yielding *exactly one region per tree top* — so the regions **are** the detected trees.
 2. **Region adjacency graph.** Neighbouring regions get a weighted edge,
@@ -30,7 +30,7 @@ rHRG treats that as the central problem rather than a preprocessing nuisance. Su
 
 ```r
 # install.packages("remotes")
-remotes::install_github("igorpawelec/rhrg")
+remotes::install_github("igorpawelec/rcacumen")
 ```
 
 A C compiler is needed, which R already requires on Linux and macOS; on Windows install [Rtools](https://cran.r-project.org/bin/windows/Rtools/).
@@ -44,7 +44,7 @@ install.packages("terra")
 ## Quick start
 
 ```r
-library(rhrg)
+library(rcacumen)
 
 res <- delineate("chm.tif",
                  smooth_ws      = 3,
@@ -118,31 +118,31 @@ Ties resolve to the lower crown id, so output is fully reproducible. `attr(crown
 
 `protect_seeds = TRUE` disables merging entirely — every input top keeps its own crown. Use it when the tops are trusted, e.g. field-measured.
 
-## Agreement with pyHRG
+## Agreement with pycacumen
 
 Two implementations of one method are only useful if they agree, so this is measured, not asserted.
 
 | Test | Result |
 |---|---|
 | Watershed vs `scikit-image`, 200 random scenes incl. plateaus | **0 of 422,687 px differ** |
-| Full pipeline vs pyHRG, 70 synthetic scenes, all 3 conflict rules | 60 small scenes **exact**; 10 large crowded ones within **0.032 %** |
+| Full pipeline vs pycacumen, 70 synthetic scenes, all 3 conflict rules | 60 small scenes **exact**; 10 large crowded ones within **0.032 %** |
 | Crown counts, contested counts | identical throughout |
 | Watershed vs `scikit-image`, 7 **real** CHMs | 375 of 147,368 masked px differ (**0.25 %**) |
-| Full pipeline vs pyHRG, same 7 real CHMs | 5,142 of 281,602 px differ (**1.8 %**) |
+| Full pipeline vs pycacumen, same 7 real CHMs | 5,142 of 281,602 px differ (**1.8 %**) |
 
 Reproduce it yourself:
 
 ```bash
-pip install pyhrg
-python3 tools/generate_pyhrg_reference.py
-Rscript tools/cross_validate_against_pyhrg.R
+pip install pycacumen
+python3 tools/generate_pycacumen_reference.py
+Rscript tools/cross_validate_against_pycacumen.R
 ```
 
 ### Where the last 0.25 % goes
 
 The synthetic scenes agree exactly; real canopy height models do not, and the
 honest version is that the equality holds on the test suite rather than in
-general. Measured stage by stage, each stage fed pyHRG's own output for the
+general. Measured stage by stage, each stage fed pycacumen's own output for the
 previous one:
 
 - `smooth_chm` — identical to the last bit
@@ -164,7 +164,7 @@ any watershed difference as significant however small it looks.
 Two details make that agreement possible, and both are easy to get wrong in a port:
 
 - **R stores matrices by column, Python by row.** The neighbour visiting order decides how plateaus resolve, so the C code is handed `t(matrix)`, whose column-major buffer is byte-identical to a row-major NumPy array. Skip that and the watershed silently transposes its tie-breaking.
-- **Floating-point addition is not associative.** The pixel pass traverses in the same order as pyHRG, so the same heights are summed in the same sequence and the variances match to the last bit.
+- **Floating-point addition is not associative.** The pixel pass traverses in the same order as pycacumen, so the same heights are summed in the same sequence and the variances match to the last bit.
 
 ## Notes on behaviour
 
@@ -202,21 +202,21 @@ implementations or library versions without re-running both.
 
 ## Relation to PyCrown
 
-The pipeline shape — smooth the CHM, find tops as local maxima, delineate crowns — comes from [PyCrown](https://github.com/manaakiwhenua/pycrown) (Zörner et al. 2018), via pyHRG. **The Dalponte & Coomes delineation that PyCrown re-implements is not part of rHRG**; hierarchical region growing is the only method here. If you want Dalponte in R, [lidR](https://github.com/r-lidar/lidR) and [itcSegment](https://cran.r-project.org/package=itcSegment) do it well and there is no reason to duplicate them.
+The pipeline shape — smooth the CHM, find tops as local maxima, delineate crowns — comes from [PyCrown](https://github.com/manaakiwhenua/pycrown) (Zörner et al. 2018), via pycacumen. **The Dalponte & Coomes delineation that PyCrown re-implements is not part of rcacumen**; hierarchical region growing is the only method here. If you want Dalponte in R, [lidR](https://github.com/r-lidar/lidR) and [itcSegment](https://cran.r-project.org/package=itcSegment) do it well and there is no reason to duplicate them.
 
 ## Testing
 
 ```r
-remotes::install_github("igorpawelec/rhrg")
+remotes::install_github("igorpawelec/rcacumen")
 # or, from a clone:
-#   R CMD build rhrg && R CMD check rhrg_0.4.2.tar.gz
+#   R CMD build rcacumen && R CMD check rcacumen_0.4.2.tar.gz
 ```
 
 ## Citation
 
-If you use rHRG in your research, please cite the software and the work it builds on:
+If you use rcacumen in your research, please cite the software and the work it builds on:
 
-> Pawelec, I. (2026). *rhrg: individual tree crown delineation from canopy height models by Hierarchical Region Growing* [R package]. https://github.com/igorpawelec/rhrg
+> Pawelec, I. (2026). *rcacumen: individual tree crown delineation from canopy height models by Hierarchical Region Growing* [R package]. https://github.com/igorpawelec/rcacumen
 
 Machine-readable metadata, including everything cited below, is in [`CITATION.cff`](CITATION.cff).
 
@@ -238,4 +238,4 @@ Machine-readable metadata, including everything cited below, is in [`CITATION.cf
 
 GNU General Public License v3.0 — see [LICENSE](LICENSE).
 
-rHRG derives from PyCrown, which is published under GPLv3; the licence carries over.
+rcacumen derives from PyCrown, which is published under GPLv3; the licence carries over.

@@ -70,7 +70,7 @@ jobs:
           upload-snapshots: true
 
   cross-validation:
-    # The README claims rHRG and pyHRG are identical pixel for pixel and
+    # The README claims rcacumen and pycacumen are identical pixel for pixel and
     # that this is checked rather than asserted. tools/ holds that check but
     # it needs Python, which CRAN machines do not have — so it never ran
     # anywhere automatically. GitHub runners do have Python, so it runs here.
@@ -79,7 +79,7 @@ jobs:
     # generator builds. It does not cover agreement on real canopy height
     # models, which is a separate open question.
     runs-on: ubuntu-latest
-    name: identical to pyHRG
+    name: identical to pycacumen
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -99,26 +99,26 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install pyHRG
-        # From git, not PyPI: pyHRG is not published yet. Switch this to
-        # `pip install pyhrg` once it is, so the check runs against the
+      - name: Install pycacumen
+        # From git, not PyPI: pycacumen is not published yet. Switch this to
+        # `pip install pycacumen` once it is, so the check runs against the
         # release rather than the tip of main.
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "pyhrg @ git+https://github.com/igorpawelec/pyhrg.git"
+          python -m pip install "pycacumen @ git+https://github.com/igorpawelec/pycacumen.git"
 
       - name: Check the version declarations agree
         # CITATION.cff is .Rbuildignore'd, so R CMD check never sees it;
         # it sat two releases behind DESCRIPTION before this step existed.
         run: Rscript tools/check_versions.R
 
-      - name: Install rHRG
+      - name: Install rcacumen
         run: R CMD INSTALL .
 
-      - name: Generate reference crowns from pyHRG
-        run: python tools/generate_pyhrg_reference.py
+      - name: Generate reference crowns from pycacumen
+        run: python tools/generate_pycacumen_reference.py
 
-      - name: Compare rHRG against them
-        # cross_validate_against_pyhrg.R stops non-zero on any disagreement,
+      - name: Compare rcacumen against them
+        # cross_validate_against_pycacumen.R stops non-zero on any disagreement,
         # so a single differing pixel fails the job.
-        run: Rscript tools/cross_validate_against_pyhrg.R
+        run: Rscript tools/cross_validate_against_pycacumen.R

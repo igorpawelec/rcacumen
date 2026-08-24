@@ -17,7 +17,7 @@
 #'
 #' @details
 #' Edges are handled by reflection, matching `scipy.ndimage`, so results
-#' agree with pyHRG.
+#' agree with pycacumen.
 #'
 #' `NA` is not treated specially and will spread by `ws %/% 2`. Fill nodata
 #' before smoothing if that matters.
@@ -47,7 +47,7 @@ smooth_chm <- function(chm, ws = 3L, method = c("median", "mean", "gaussian", "m
   # NA is skipped, not propagated. A window holding nothing but NA has no
   # statistic and stays NA.
   #
-  # This matches pyHRG 0.5.0, which had to stop handing NaN to
+  # This matches pycacumen 0.5.0, which had to stop handing NaN to
   # scipy.ndimage: those filters are undefined on NaN rather than NaN-aware.
   # With the values 1..9 and one NaN, median_filter returned 9, 5 or 4
   # depending on where the NaN sat, and maximum_filter returned nan, 9 or 8.
@@ -93,7 +93,7 @@ smooth_chm <- function(chm, ws = 3L, method = c("median", "mean", "gaussian", "m
 .gaussian_filter <- function(m, sigma) {
   # Normalised convolution when NA is present: weight the kernel by which
   # cells exist, so a hole neither drags neighbours towards zero nor
-  # spreads. Matches pyHRG's gaussian_filter(filled)/gaussian_filter(mask).
+  # spreads. Matches pycacumen's gaussian_filter(filled)/gaussian_filter(mask).
   if (anyNA(m)) {
     valid <- !is.na(m)
     filled <- m; filled[!valid] <- 0

@@ -1,6 +1,6 @@
 /* Per-region statistics and region adjacency, in one pass over the pixels.
  *
- * Mirrors pyhrg.hrg._build_adjacency_and_stats, including the row-major
+ * Mirrors pycacumen.hrg._build_adjacency_and_stats, including the row-major
  * traversal order: floating-point addition is not associative, so summing
  * the same heights in a different order gives a slightly different variance,
  * which could tip a threshold comparison. Same order, same bits.

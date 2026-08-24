@@ -1,4 +1,4 @@
-library(rhrg)
+library(rcacumen)
 ok <- function(cond, what) {
   if (!isTRUE(cond)) stop("FAILED: ", what, call. = FALSE)
   cat("  ok:", what, "\n")

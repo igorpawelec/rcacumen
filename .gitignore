@@ -6,6 +6,6 @@ src/*.o
 src/*.so
 src/*.dll
 
-# Written by tools/generate_pyhrg_reference.py; regenerated on demand
+# Written by tools/generate_pycacumen_reference.py; regenerated on demand
 # and in CI, never committed.
 tools/reference/
