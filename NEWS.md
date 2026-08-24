@@ -1,5 +1,15 @@
 # rcacumen 0.4.0
 
+
+# rcacumen 0.5.0
+
+## Changed
+
+* **Renamed from `rHRG`.** The package name is now `rcacumen`, which is a
+  breaking change for `library()` calls and for any dependency on it. The
+  algorithms and the results are unchanged.
+
+
 # rcacumen 0.4.2
 
 ## Changed
