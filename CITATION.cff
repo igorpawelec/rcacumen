@@ -11,7 +11,7 @@ authors:
 repository-code: "https://github.com/igorpawelec/rcacumen"
 license: GPL-3.0-or-later
 version: "0.5.0"
-date-released: "2026-07-22"
+date-released: "2026-08-24"
 keywords:
   - individual tree crown delineation
   - canopy height model
